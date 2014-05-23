@@ -1,4 +1,5 @@
 import psutil
+import datetime
 
 class traffic_counter(object):
     """Counts system network traffic"""
@@ -7,16 +8,20 @@ class traffic_counter(object):
         self.sent = None
         self.recv = None
         self.beVerbose = beVerbose
+        self.lastCheck = None
 
     def get_total_traffic(self):
         counter = psutil.net_io_counters()
         if counter:
             sent, recv = counter.bytes_sent, counter.bytes_recv
-            if self.sent and self.recv:
+            if self.sent and self.recv and self.lastCheck:
                 deltaSent = sent - self.sent
                 deltaRecv = recv - self.recv
-                speedSent = (deltaSent / self.updatePeriod) / 1024
-                speedRecv = (deltaRecv / self.updatePeriod) / 1024
+                now = datetime.datetime.now()
+                deltaTime =  now - self.lastCheck
+                self.lastCheck = now
+                speedSent = (deltaSent / deltaTime.seconds) / 1024
+                speedRecv = (deltaRecv / deltaTime.seconds) / 1024
                 if self.beVerbose:
                     print("Recv: {:f} kB/s".format(speedRecv))
                     print("Sent: {:f} kB/s".format(speedSent))
@@ -25,5 +30,6 @@ class traffic_counter(object):
             else:
                 self.sent = sent
                 self.recv = recv
+                self.lastCheck = datetime.datetime.now()
                 return None, None, None
 
