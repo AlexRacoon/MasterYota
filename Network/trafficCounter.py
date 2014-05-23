@@ -23,6 +23,5 @@ class traffic_counter(object):
                     print("Total: {:f} kB/s".format(speedRecv + speedSent))
                     return speedRecv, speedSent, (speedSent + speedRecv)
 
-
             self.sent = sent
             self.recv = recv
