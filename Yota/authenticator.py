@@ -1,4 +1,6 @@
-class authenticator(object):
+import random
+#See http://wwwsearch.sourceforge.net/mechanize/
+class authman(object):
     """authenticates at yota profile"""
     def __init__(self, user, passw, beVerbose = True):
         self.user = user
@@ -10,6 +12,17 @@ class authenticator(object):
         success = False
         if self.beVerbose:
             print("Trying to authenticate")
-            success = True
-        return success
         
+        if self.isAuth():
+            if self.beVerbose:
+                print("Already authenticated");
+            return True;
+
+        success = bool(random.getrandbits(1))
+
+        if self.beVerbose:
+            print("Success :)") if success else print("Fail :(") 
+        return success
+    
+    def isAuth(self):
+        return bool(random.getrandbits(1)) 
