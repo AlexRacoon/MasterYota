@@ -1,15 +1,20 @@
-from Yota import authenticator
-from Yota import requester
 from Optimizer import rules
+
 
 def optimize(reqman, totalSpeed):
     if not totalSpeed:
         return
 
-    if speed:
-        _switchTo(speed, reqman)
+    speed = None
 
-def _switchTo(speed, reqman):
-    print("Switching to {:d} speed, {:d} a day".format(speed.speed, speed.cost))
+    for rule, sp in rules.ranges.items():
+        if rule(totalSpeed):
+            speed = sp
+
+    if speed:
+        switchTo(speed, reqman)
+
+
+def switchTo(speed, reqman):
+    print("Switching to {:f} speed, {:d} a day".format(speed.speed, speed.cost))
     reqman.changeLimit(speed)
-        
