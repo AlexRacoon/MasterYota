@@ -9,14 +9,15 @@ class reqman(object):
         'goto': 'https://my.yota.ru:443/selfcare/loginSuccess',
         'gotoOnFail': 'https://my.yota.ru:443/selfcare/loginError',
         'org': 'customer',
-        'old-token': 'alexbecoon@gmail.com',
-        'IDToken2': 'xtoxphcxlx',
-        'IDToken1': '6034675940'
+        'old-token': '',
+        'IDToken2': '',
+        'IDToken1': ''
     }
 
     payloadChangeSpeed = {
         'product': '',
         'offerCode': '',
+        #TODO: gather resource id from the html responce
         'resourceId': '88014285',
         'areOffersAvailable': 'false',
         'status': 'custom',
@@ -27,30 +28,21 @@ class reqman(object):
         'isDisablingAutoprolong': 'false'
     }
 
-    def __init__(self, user, passw, account, beVerbose = True):
-        self.beVerbose = beVerbose
-        self.user = user
-        self.passw = passw
-        self.account = account
+    def __init__(self, creds):
+        creds.fillPayload(self.payloadAuth)
 
-    def change_limit(self, offerCode):
-        self.payloadAuth["old-token"] = self.user
-        self.payloadAuth["IDToken2"] = self.passw
-        self.payloadAuth["IDToken1"] = self.account
-
+    def change_limit(self, offer_code):
         with requests.session() as session:
             session.post('https://login.yota.ru/UI/Login', data=self.payloadAuth, headers={'Content-Language': 'en-RU'})
             r = session.get('https://my.yota.ru/selfcare/devices')
             content = str(r.content)
-            product = self.get_product(content)
-            if self.beVerbose:
-                print("Trying to send the request")
+            product = self._get_product(content)
             self.payloadChangeSpeed["product"] = product
-            self.payloadChangeSpeed["offerCode"] = offerCode
-
+            self.payloadChangeSpeed["offerCode"] = offer_code
             session.post('https://my.yota.ru/selfcare/devices/changeOffer', data=self.payloadChangeSpeed)
 
-    def get_product(self, content):
+    @staticmethod
+    def _get_product(content):
         match = re.findall(r'(?<=var sliderData = \{\").*?(?=\":)', content)
         for matchedtext in match:
             print(matchedtext)

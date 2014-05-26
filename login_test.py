@@ -24,17 +24,16 @@ payloadChangeSpeed = {
 }
 
 
-def getProductId(content):
+def get_product(content):
     match = re.findall(r'(?<=var sliderData = \{\").*?(?=\":)', content)
-    for matchedtext in match:
-        print(matchedtext)
-        return matchedtext
+    for matches in match:
+        return matches
 
 with requests.Session() as c:
     c.post('https://login.yota.ru/UI/Login', data=payloadAuth, headers={'Content-Language': 'en-RU'})
     r = c.get('https://my.yota.ru/selfcare/devices')
     content = str(r.content)
-    productId = getProductId(content)
+    productId = get_product(content)
     payloadChangeSpeed["product"] = productId
     c.post('https://my.yota.ru/selfcare/devices/changeOffer', data=payloadChangeSpeed)
     r2 = c.get('https://my.yota.ru/selfcare/devices')

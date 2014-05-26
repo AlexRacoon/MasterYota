@@ -1,41 +1,36 @@
 import psutil
 import datetime
 
+
 class traffic_counter(object):
     """Counts system network traffic"""
-    def __init__(self, updatePeriod, beVerbose = True):
-        self.updatePeriod = updatePeriod
+    def __init__(self):
         self.sent = None
         self.recv = None
-        self.beVerbose = beVerbose
-        self.lastCheck = None
+        self.last_check = None
 
     def get_total_traffic(self):
         counter = psutil.net_io_counters()
         if counter:
             sent, recv = counter.bytes_sent, counter.bytes_recv
-            if self.sent and self.recv and self.lastCheck:
-                deltaSent = sent - self.sent
-                deltaRecv = recv - self.recv
+            if self.sent and self.recv and self.last_check:
+                delta_sent = sent - self.sent
+                delta_recv = recv - self.recv
                 now = datetime.datetime.now()
-                deltaTime = now - self.lastCheck
+                delta_time = now - self.last_check
 
-                speedSent = (deltaSent / deltaTime.seconds) / 1024
-                speedRecv = (deltaRecv / deltaTime.seconds) / 1024
+                speed_sent = (delta_sent / delta_time.seconds) / 1024
+                speed_recv = (delta_recv / delta_time.seconds) / 1024
 
                 self.sent = sent
                 self.recv = recv
-                self.lastCheck = now
+                self.last_check = now
 
-                if self.beVerbose:
-                    print("Recv: {:f} kB/s".format(speedRecv))
-                    print("Sent: {:f} kB/s".format(speedSent))
-                    print("Total: {:f} kB/s".format(speedRecv + speedSent))
-
-                return speedRecv, speedSent, (speedSent + speedRecv)
+                print("Total: {:f} kB/s".format(speed_recv + speed_sent))
+                return speed_sent + speed_recv
             else:
                 self.sent = sent
                 self.recv = recv
-                self.lastCheck = datetime.datetime.now()
+                self.last_check = datetime.datetime.now()
                 return None, None, None
 
