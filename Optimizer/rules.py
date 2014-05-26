@@ -4,7 +4,7 @@ m = lambda x: x * 128
 
 
 class products(object):
-    def __init__(self, id, speed, cost):
+    def __init__(self, speed, cost, id):
         self.speed = speed
         self.cost = cost
         self.id = id

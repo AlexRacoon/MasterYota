@@ -18,15 +18,21 @@ class traffic_counter(object):
                 deltaSent = sent - self.sent
                 deltaRecv = recv - self.recv
                 now = datetime.datetime.now()
-                deltaTime =  now - self.lastCheck
-                self.lastCheck = now
+                deltaTime = now - self.lastCheck
+
                 speedSent = (deltaSent / deltaTime.seconds) / 1024
                 speedRecv = (deltaRecv / deltaTime.seconds) / 1024
+
+                self.sent = sent
+                self.recv = recv
+                self.lastCheck = now
+
                 if self.beVerbose:
                     print("Recv: {:f} kB/s".format(speedRecv))
                     print("Sent: {:f} kB/s".format(speedSent))
                     print("Total: {:f} kB/s".format(speedRecv + speedSent))
-                    return speedRecv, speedSent, (speedSent + speedRecv)
+
+                return speedRecv, speedSent, (speedSent + speedRecv)
             else:
                 self.sent = sent
                 self.recv = recv
