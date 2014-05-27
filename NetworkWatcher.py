@@ -8,6 +8,8 @@ import time
 from Network import TrafficCounter
 from Optimizer import optimizer
 import argparse
+from Yota import requester
+from Optimizer import rules
 
 
 class Credentials(object):
@@ -31,7 +33,7 @@ class NetworkManager(object):
         self.interrupt = False
         self.counter = TrafficCounter.TrafficCounter()
         self.creds = creds
-        self.product = None
+        self.product = self._get_product()
 
     def start(self):
         while not self.interrupt:
@@ -43,13 +45,22 @@ class NetworkManager(object):
     def stop(self):
         self.interrupt = True
 
+    def _get_product(self):
+        req = requester.reqman(self.creds)
+        current_code = req.parse_selected_product_code()
+        product = None
+        for rule, prod in rules.ranges.items():
+            if prod.id == current_code:
+                product = prod
+                break
+        return product
+
 
 def main(argv):
     creds = Credentials()
     creds.account = argv["account"]
     creds.passw = argv["password"]
     creds.email = argv["email"]
-
     watcher = NetworkManager(creds)
     watcher.start()
 

@@ -44,5 +44,16 @@ class reqman(object):
     def _get_product(content):
         match = re.findall(r'(?<=var sliderData = \{\").*?(?=\":)', content)
         for matchedtext in match:
-            print(matchedtext)
             return matchedtext
+
+    def parse_selected_product_code(self):
+        with requests.session() as session:
+            session.post('https://login.yota.ru/UI/Login', data=self.payloadAuth, headers={'Content-Language': 'en-RU'})
+            r = session.get('https://my.yota.ru/selfcare/devices')
+            #content = str(r.content)
+            content = open("output2.html").read()
+            match = re.findall(r'(?<=isDefaultSelectedPoint\":true,\"code\":\").*?(?=\",)', content)
+            for matchedtext in match:
+                return matchedtext
+
+        return None
