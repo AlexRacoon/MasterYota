@@ -9,6 +9,11 @@ class Product(object):
         self.cost = cost
         self.id = id
 
+    def __eq__(self, other):
+        if isinstance(other, Product):
+            return other.id == self.id and other.speed == self.speed and other.id == self.id
+        else:
+            return False
 
 ranges = {lambda x: x < k(320): Product(320, 300, "POS-MA6-0002"),
           lambda x: k(320) <= x < k(416): Product(416, 350, "POS-MA6-0003"),
@@ -31,5 +36,4 @@ ranges = {lambda x: x < k(320): Product(320, 300, "POS-MA6-0002"),
           lambda x: m(8.5) <= x < m(9.2): Product(9.2, 1200, "POS-MA6-0020"),
           lambda x: m(9.2) <= x < m(10): Product(10, 1250, "POS-MA6-0021"),
           lambda x: m(10) <= x < m(12): Product(12, 1350, "POS-MA6-0022"),
-          lambda x: m(12) <= x < m(15): Product(15, 1350, "POS-MA6-0023"),
-          lambda x: m(15) <= x: Product(20, 1400, "POS-MA6-0024")}
+          lambda x: m(12) <= x < m(15): Product(15, 1350, "POS-MA6-0023")}

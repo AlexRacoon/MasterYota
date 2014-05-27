@@ -1,6 +1,5 @@
-import requests
 import re
-
+import requests
 
 class reqman(object):
     """sends requests to change the speed"""
@@ -29,7 +28,7 @@ class reqman(object):
     }
 
     def __init__(self, creds):
-        creds.fillPayload(self.payloadAuth)
+        creds.fill_payload(self.payloadAuth)
 
     def change_limit(self, offer_code):
         with requests.session() as session:

@@ -5,27 +5,21 @@ __revision__ = "$Id$"
 __version__ = "0.2"
 
 import time
-import sys
-import getopt
-from Network import trafficCounter
+from Network import TrafficCounter
 from Optimizer import optimizer
+import argparse
 
 
 class Credentials(object):
     def __init__(self):
-        self.login = None
+        self.email = None
         self.passw = None
         self.account = None
 
-    def __init__(self, login, passw, account):
-        self.login = login
-        self.passw = passw
-        self.account = account
-
     def fill_payload(self, payload):
-        if self.login and self.passw and self.account:
+        if self.email and self.passw and self.account:
             payload['IDToken1'] = self.account
-            payload['old-token'] = self.login
+            payload['old-token'] = self.email
             payload['IDToken2'] = self.passw
         else:
             raise ValueError
@@ -35,13 +29,15 @@ class NetworkManager(object):
     def __init__(self, creds, refresh=10):
         self.refresh = refresh
         self.interrupt = False
-        self.counter = trafficCounter.traffic_counter()
+        self.counter = TrafficCounter.TrafficCounter()
         self.creds = creds
+        self.product = None
 
     def start(self):
         while not self.interrupt:
             total = self.counter.get_total_traffic()
-            optimizer.optimize(total, self.creds)
+            opt = optimizer.optimizer(self)
+            opt.optimize(total, self.creds)
             time.sleep(self.refresh)
 
     def stop(self):
@@ -50,27 +46,18 @@ class NetworkManager(object):
 
 def main(argv):
     creds = Credentials()
-    try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["email=", "account=", "passw="])
-    except getopt.GetoptError:
-        print('test.py --email <email> --account <account> --passw <passw>')
-        sys.exit(2)
-
-    for opt, arg in opts:
-        if opt == '-h':
-            print('test.py --email <email> --account <account> --passw <passw>')
-            sys.exit()
-        elif opt in ("-e", "--email"):
-            creds.login = arg
-        elif opt in ("-p", "--passw"):
-            creds.passw = arg
-        elif opt in ("-a", "account"):
-            creds.account = arg
+    creds.account = argv["account"]
+    creds.passw = argv["password"]
+    creds.email = argv["email"]
 
     watcher = NetworkManager(creds)
     watcher.start()
 
 
 if __name__ == '__main__':
-    print('-= Welcome to Network Watcher =-')
-    main(sys.argv[:1])
+    p = argparse.ArgumentParser(description='Yota traffic optimizer')
+    p.add_argument('-a', '--account', type=str, help='Account#')
+    p.add_argument('-e', '--email', type=str, help='Email')
+    p.add_argument('-p', '--password', type=str, help='Password')
+    args = p.parse_args()
+    main(vars(args))

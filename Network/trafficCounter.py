@@ -2,7 +2,7 @@ import psutil
 import datetime
 
 
-class traffic_counter(object):
+class TrafficCounter(object):
     """Counts system network traffic"""
     def __init__(self):
         self.sent = None
@@ -32,5 +32,5 @@ class traffic_counter(object):
                 self.sent = sent
                 self.recv = recv
                 self.last_check = datetime.datetime.now()
-                return None, None, None
+                return None
 
