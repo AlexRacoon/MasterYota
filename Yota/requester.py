@@ -1,5 +1,7 @@
 import re
 import requests
+from Optimizer import rules
+
 
 class reqman(object):
     """sends requests to change the speed"""
@@ -46,7 +48,7 @@ class reqman(object):
         for matchedtext in match:
             return matchedtext
 
-    def parse_selected_product_code(self):
+    def parse_selected_product(self):
         with requests.session() as session:
             session.post('https://login.yota.ru/UI/Login', data=self.payloadAuth, headers={'Content-Language': 'en-RU'})
             r = session.get('https://my.yota.ru/selfcare/devices')
@@ -54,5 +56,13 @@ class reqman(object):
             match = re.findall(r'(?<=isDefaultSelectedPoint\":true,\"code\":\").*?(?=\",)', content)
             for matchedtext in match:
                 return matchedtext
+
+            product = None
+            for rule, prod in rules.ranges.items():
+                if prod.id == current_code:
+                    product = prod
+                    break
+        return product
+
 
         return None

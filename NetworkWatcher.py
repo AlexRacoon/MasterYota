@@ -9,7 +9,6 @@ from Network import TrafficCounter
 from Optimizer import optimizer
 import argparse
 from Yota import requester
-from Optimizer import rules
 
 
 class Credentials(object):
@@ -47,13 +46,8 @@ class NetworkManager(object):
 
     def _get_product(self):
         req = requester.reqman(self.creds)
-        current_code = req.parse_selected_product_code()
-        product = None
-        for rule, prod in rules.ranges.items():
-            if prod.id == current_code:
-                product = prod
-                break
-        return product
+        return req.parse_selected_product()
+
 
 
 def main(argv):

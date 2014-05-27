@@ -4,14 +4,15 @@ m = lambda x: x * 128
 
 
 class Product(object):
-    def __init__(self, speed, cost, id):
+    def __init__(self, speed, cost, code):
         self.speed = speed
         self.cost = cost
-        self.id = id
+        self.code = code
+        self.daysleft = None
 
     def __eq__(self, other):
         if isinstance(other, Product):
-            return other.id == self.id and other.speed == self.speed and other.id == self.id
+            return other.code == self.code and other.speed == self.speed and other.code == self.code
         else:
             return False
 
