@@ -50,8 +50,7 @@ class reqman(object):
         with requests.session() as session:
             session.post('https://login.yota.ru/UI/Login', data=self.payloadAuth, headers={'Content-Language': 'en-RU'})
             r = session.get('https://my.yota.ru/selfcare/devices')
-            #content = str(r.content)
-            content = open("output2.html").read()
+            content = str(r.content)
             match = re.findall(r'(?<=isDefaultSelectedPoint\":true,\"code\":\").*?(?=\",)', content)
             for matchedtext in match:
                 return matchedtext
