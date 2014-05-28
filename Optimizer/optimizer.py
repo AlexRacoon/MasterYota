@@ -23,6 +23,6 @@ class optimizer(object):
 
     @staticmethod
     def _switch(product, creds):
-        print("Switching to {:f} speed, {:d}R/month".format(speed.speed, speed.cost))
+        print("Switching to {:f} speed, {:d}R/month".format(product.speed, product.cost))
         reqman = requester.reqman(creds)
         reqman.change_limit(product)

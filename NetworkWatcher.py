@@ -5,7 +5,7 @@ __revision__ = "$Id$"
 __version__ = "0.2"
 
 import time
-from Network import TrafficCounter
+from Network import trafficCounter
 from Optimizer import optimizer
 import argparse
 from Yota import requester
@@ -30,7 +30,7 @@ class NetworkManager(object):
     def __init__(self, creds, refresh=10):
         self.refresh = refresh
         self.interrupt = False
-        self.counter = TrafficCounter.TrafficCounter()
+        self.counter = trafficCounter.TrafficCounter()
         self.creds = creds
         self.product = self._get_product()
 
