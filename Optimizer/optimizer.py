@@ -22,7 +22,7 @@ class optimizer(object):
             print("Already on the needed product")
 
     @staticmethod
-    def _switch(speed, creds):
+    def _switch(product, creds):
         print("Switching to {:f} speed, {:d}R/month".format(speed.speed, speed.cost))
         reqman = requester.reqman(creds)
-    #    reqman.change_limit(speed.id)
+        reqman.change_limit(product)
