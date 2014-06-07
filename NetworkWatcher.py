@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-__author__ = "Chad J. Schroeder"
+__author__ = "Alexey Coon"
 __revision__ = "$Id$"
 __version__ = "0.2"
 
@@ -27,7 +27,7 @@ class Credentials(object):
 
 
 class NetworkManager(object):
-    def __init__(self, creds, refresh=10):
+    def __init__(self, creds, refresh=5):
         self.refresh = refresh
         self.interrupt = False
         self.counter = trafficCounter.TrafficCounter()
